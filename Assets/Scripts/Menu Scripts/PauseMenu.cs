@@ -18,8 +18,6 @@ public class PauseMenu : MonoBehaviour {
     void Start() {
         if (audioSource == null)
             audioSource = GetComponent<AudioSource>();
-        Cursor.visible = true;
-        Cursor.lockState = CursorLockMode.None;
     }
 
     private void Update() {

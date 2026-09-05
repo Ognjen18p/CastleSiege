@@ -16,11 +16,6 @@ public class GameMenager : MonoBehaviour {
 
     private bool offCursor;
 
-    private void Awake() {
-        Cursor.visible = false;
-        Cursor.lockState = CursorLockMode.Locked;
-    }
-
     private void Start() {
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;
@@ -33,7 +28,7 @@ public class GameMenager : MonoBehaviour {
     }
 
     private void Update() {
-        if (!offCursor) {
+        if (offCursor) {
             Cursor.visible = false;
             Cursor.lockState = CursorLockMode.Locked;
             offCursor = true;
