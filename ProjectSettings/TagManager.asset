@@ -1,0 +1,64 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!78 &1
+TagManager:
+  serializedVersion: 2
+  tags:
+  - Ground
+  - Stone
+  - Boss
+  - SkeletonSword
+  - BossFist
+  - BossLeg
+  - PlayerSword
+  - Skeleton
+  - Chest
+  - StrafePointFloor
+  - StrafePointGround
+  - Guard
+  - StrafePointChamberFloor
+  - GuardAxe
+  - PlayerAxe
+  - PlayerLongSword
+  - Wall
+  - PlayerSpear
+  - Enemy
+  - Border
+  - Leader
+  layers:
+  - Default
+  - TransparentFX
+  - Ignore Raycast
+  - Ground
+  - Water
+  - UI
+  - Player
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  m_SortingLayers:
+  - name: Default
+    uniqueID: 0
+    locked: 0
