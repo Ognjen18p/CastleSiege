@@ -26,7 +26,6 @@ public class EnemyCommunicationLine : MonoBehaviour {
 
     public bool IsTokenHolderDefending() {
         if (tokenHolder == null) return false;
-        if (tokenHolder.currentState == EnemyBehaviour.EnemyState.Defend) return true;
         return false;
     }
 
@@ -42,7 +41,7 @@ public class EnemyCommunicationLine : MonoBehaviour {
         float clossestDistance = float.MaxValue;
         foreach (EnemyBehaviour ally in allies) {
             if (ally == null) continue;
-            float distance = Vector3.Distance(ally.player.transform.position, ally.transform.position);
+            float distance = Vector3.Distance(ally.Player.transform.position, ally.transform.position);
             if (distance < clossestDistance) {
                 clossestDistance = distance;
                 closest = ally;

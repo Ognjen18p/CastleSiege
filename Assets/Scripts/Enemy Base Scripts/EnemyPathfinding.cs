@@ -6,8 +6,7 @@ using UnityEngine;
 
 public class EnemyPathfinding : MonoBehaviour {
     public Strafing strafing;
-    public List<StrafePoint> path;
-    public StrafePoint strafeStatePoint;
+    public List<StrafePoint> Path;
 
     private class AStarNodeData {
         public StrafePoint parent;
@@ -56,18 +55,18 @@ public class EnemyPathfinding : MonoBehaviour {
         return closestPoint;
     }
 
-    public bool IsTargetInGap(GameObject target, float gapDistance) {
-        if(path == null || path.Count == 0) return false;
-        StrafePoint endPoint = path[path.Count-1];
+    public bool IsEndPointInRange(GameObject target, float range) {
+        if(Path == null || Path.Count == 0) return false;
+        StrafePoint endPoint = Path[Path.Count-1];
         float distanceToTarget = Vector3.Distance(endPoint.transform.position, target.transform.position);
-        if (distanceToTarget > gapDistance) {
-            return false;
+        if (distanceToTarget < range) {
+            return true;
         }
-        return true;
+        return false;
     }
 
-    public List<StrafePoint> GetAStarPath(GameObject target) {
-        path = new List<StrafePoint>();
+    public void MakePathTo(GameObject target) {
+        Path = new List<StrafePoint>();
         StrafePoint startPoint = GetClosestPoint();
         StrafePoint endPoint = GetClosestPointToTarget(target);
 
@@ -86,15 +85,15 @@ public class EnemyPathfinding : MonoBehaviour {
                 }
             }
             if (currentPoint == endPoint) {
-                path = new List<StrafePoint>();
+                Path = new List<StrafePoint>();
                 while (currentPoint != null) {
                     currentPoint.selected = true;
                     currentPoint.DebugPaint();
-                    path.Add(currentPoint);
+                    Path.Add(currentPoint);
                     currentPoint = nodesData[currentPoint].parent;
                 }
-                path.Reverse();
-                return path;
+                Path.Reverse();
+                return;
             }
             openList.Remove(currentPoint);
             closedSet.Add(currentPoint);
@@ -102,29 +101,26 @@ public class EnemyPathfinding : MonoBehaviour {
             foreach (StrafePoint neighbor in currentPoint.neighbors) {
                 if (closedSet.Contains(neighbor)) continue;
 
-                float tentativeG = nodesData[currentPoint].g + Vector3.Distance(currentPoint.transform.position, neighbor.transform.position);
+                float tempG = nodesData[currentPoint].g + Vector3.Distance(currentPoint.transform.position, neighbor.transform.position);
 
-                if (!openList.Contains(neighbor) || tentativeG < nodesData[neighbor].g) {
-                    nodesData[neighbor] = new AStarNodeData(currentPoint, tentativeG, Vector3.Distance(neighbor.transform.position, endPoint.transform.position));
+                if (!openList.Contains(neighbor) || tempG < nodesData[neighbor].g) {
+                    nodesData[neighbor] = new AStarNodeData(currentPoint, tempG, Vector3.Distance(neighbor.transform.position, endPoint.transform.position));
 
                     if (!openList.Contains(neighbor)) {
                         openList.Add(neighbor);
                     }
                 }
-
             }
         }
-        path = new List<StrafePoint>();
-        return path = new List<StrafePoint>();
     }
 
     public void ClearPath() {
-        if(path == null || path.Count == 0) return;
-        foreach (StrafePoint point in path) {
+        if(Path == null || Path.Count == 0) return;
+        foreach (StrafePoint point in Path) {
             point.selected = false;
             point.DebugPaint();
         }
-        path.Clear();
+        Path.Clear();
     }
 
 }

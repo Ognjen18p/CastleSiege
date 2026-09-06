@@ -16,7 +16,6 @@ public class IntroTrigger : MonoBehaviour {
 
     private void OnTriggerStay(Collider other) {
         if (other.CompareTag("Player")) {
-            Debug.Log("Player entered the trigger");
             //introPane.SetActive(true);
             //Cursor.visible = true;
             //Cursor.lockState = CursorLockMode.None;

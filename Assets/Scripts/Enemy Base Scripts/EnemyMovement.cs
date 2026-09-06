@@ -9,7 +9,7 @@ public class EnemyMovement : MonoBehaviour {
     public float runSpeed;
     [SerializeField] protected float rotationSpeed;
 
-    public float distanceToStrafePoint { get; private set; }
+    public float distanceToNextPoint { get; private set; }
     private Rigidbody rb;
     private EnemyAnimator animator;
 
@@ -44,13 +44,13 @@ public class EnemyMovement : MonoBehaviour {
     }
 
     public void ChaseAt(GameObject point, GameObject lookAt) {
-        distanceToStrafePoint = Vector3.Distance(transform.position, point.transform.position);
+        distanceToNextPoint = Vector3.Distance(transform.position, point.transform.position);
         RotateTowards(lookAt);
         MoveTowards(transform.forward, runSpeed);
     }
 
     public void MoveTo(GameObject point, GameObject lookAt) {
-        distanceToStrafePoint = Vector3.Distance(transform.position, point.transform.position);
+        distanceToNextPoint = Vector3.Distance(transform.position, point.transform.position);
         Vector3 direction = (point.transform.position - transform.position).normalized;
         RotateTowards(lookAt);
         MoveTowards(direction, walkSpeed);

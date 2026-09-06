@@ -703,8 +703,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   strafing: {fileID: 616996036}
-  path: []
-  strafeStatePoint: {fileID: 0}
+  Path: []
 --- !u!114 &17399883
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -717,14 +716,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e52227f2c6881d549a6f7d47ad10e67c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  guardingPoint: {fileID: 963005697}
-  guardingSightPoint: {fileID: 1077958284}
-  questionMark: {fileID: 0}
-  dangerMark: {fileID: 0}
-  chaseAudioSource: {fileID: 0}
-  chaseRunSound: {fileID: 0}
-  player: {fileID: 1717328612}
-  currentState: 0
 --- !u!114 &17399884
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -869,8 +860,8 @@ MonoBehaviour:
   defendChance: 80
   attackChance: 90
   attackAgainChance: 50
+  counterAttackChance: 40
   strafeBasicAttackChance: 15
-  weapon: {fileID: 618585105}
   attackSound: {fileID: 0}
   chaseSound: {fileID: 0}
 --- !u!1 &34477912
@@ -4467,8 +4458,8 @@ GameObject:
   - component: {fileID: 287201556}
   - component: {fileID: 287201554}
   - component: {fileID: 287201553}
-  - component: {fileID: 287201562}
   - component: {fileID: 287201552}
+  - component: {fileID: 287201562}
   - component: {fileID: 287201558}
   - component: {fileID: 287201559}
   - component: {fileID: 287201563}
@@ -4614,14 +4605,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e52227f2c6881d549a6f7d47ad10e67c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  guardingPoint: {fileID: 963005697}
-  guardingSightPoint: {fileID: 1077958284}
-  questionMark: {fileID: 101323204}
-  dangerMark: {fileID: 1802381417}
-  chaseAudioSource: {fileID: 1306107978}
-  chaseRunSound: {fileID: 8300000, guid: 2851ec84757994f4d80b4fd90951a3c6, type: 3}
-  player: {fileID: 1717328612}
-  currentState: 0
 --- !u!114 &287201553
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4634,7 +4617,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c00f9633df860a04ba7dc895227fb756, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  health: 1000
+  health: 100
   healthBar: {fileID: 1168187242}
   maxHealth: 0
   healthDamageSound: {fileID: 8300000, guid: bff1bb29025831447b5aab5858bc3755, type: 3}
@@ -4706,8 +4689,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   strafing: {fileID: 616996036}
-  path: []
-  strafeStatePoint: {fileID: 0}
+  Path: []
 --- !u!114 &287201559
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4720,9 +4702,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a285cb47babe28a48882595027183949, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  walkSpeed: 100
-  runSpeed: 50
-  rotationSpeed: 200
+  walkSpeed: 70
+  runSpeed: 80
+  rotationSpeed: 100
 --- !u!135 &287201560
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -4796,9 +4778,9 @@ MonoBehaviour:
   defendChance: 80
   attackChance: 90
   attackAgainChance: 50
-  strafeBasicAttackChance: 15
-  weapon: {fileID: 1240661408}
-  attackSound: {fileID: 8300000, guid: 11392e981fbf20c409ba693bbc85d153, type: 3}
+  counterAttackChance: 40
+  strafeBasicAttackChance: 70
+  attackSound: {fileID: 8300000, guid: eda84dfd7b80b3246971f59ca35c5d27, type: 3}
   chaseSound: {fileID: 8300000, guid: 65f1c98993bf9104f9163e3504276d4d, type: 3}
 --- !u!1 &287987740
 GameObject:
@@ -14192,8 +14174,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   strafing: {fileID: 616996036}
-  path: []
-  strafeStatePoint: {fileID: 0}
+  Path: []
 --- !u!114 &1447585321
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -14206,14 +14187,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e52227f2c6881d549a6f7d47ad10e67c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  guardingPoint: {fileID: 1404743662}
-  guardingSightPoint: {fileID: 1077958284}
-  questionMark: {fileID: 0}
-  dangerMark: {fileID: 0}
-  chaseAudioSource: {fileID: 0}
-  chaseRunSound: {fileID: 0}
-  player: {fileID: 1717328612}
-  currentState: 0
 --- !u!114 &1447585322
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -14358,8 +14331,8 @@ MonoBehaviour:
   defendChance: 80
   attackChance: 90
   attackAgainChance: 50
+  counterAttackChance: 40
   strafeBasicAttackChance: 15
-  weapon: {fileID: 1956776648}
   attackSound: {fileID: 0}
   chaseSound: {fileID: 0}
 --- !u!1 &1459931383 stripped
@@ -16752,9 +16725,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5b6fafc1c3376874e9768e556cac146a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  isAttack: 0
-  isGuard: 0
-  attackCooldown: 1.2
   weapon: {fileID: 228329658}
   audioSource: {fileID: 0}
   getHitSound: {fileID: 8300000, guid: abb075a4c31781f44b09fc9dc8989f5a, type: 3}

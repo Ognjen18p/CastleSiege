@@ -51,6 +51,9 @@ public class PlayerAnimator : MonoBehaviour {
             animator.SetTrigger("Attack2");
         }
     }
+    public void Special() {
+        animator.SetTrigger("SwordSpecialAttack");
+    }
 
     public void PlayGuard(bool isGuarding) {
         animator.SetBool("Guard", isGuarding);

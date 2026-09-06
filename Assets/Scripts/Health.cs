@@ -73,7 +73,6 @@ public class Health : MonoBehaviour {
             targetHealth,
             barLerpSpeed * Time.deltaTime
         );
-        Debug.Log($"Health: {health}, Target Health: {targetHealth}");
         healthBar.fillAmount = health / maxHealth;
 
         if (Mathf.Abs(health - targetHealth) < 0.01f) {

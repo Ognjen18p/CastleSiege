@@ -3,19 +3,21 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class EnemyGuardingState : EnemyState {
-    private EnemyBehaviour enemyBehaviour;
+    private EnemyBehaviour behaviour;
     public EnemyGuardingState(EnemyBehaviour enemyBehaviour) {
-        this.enemyBehaviour = enemyBehaviour;
+        behaviour = enemyBehaviour;
     }
     void EnemyState.Enter() {
-        throw new System.NotImplementedException();
+        behaviour.Movement.StopMovement();
     }
 
     void EnemyState.Exit() {
-        throw new System.NotImplementedException();
     }
 
     void EnemyState.Update() {
-        throw new System.NotImplementedException();
+        if(behaviour.PlayerInSight) {
+            behaviour.SwitchState(EnemyStateType.Chase);
+        }
     }
 }
+

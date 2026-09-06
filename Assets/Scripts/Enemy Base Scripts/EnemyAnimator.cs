@@ -31,12 +31,19 @@ public class EnemyAnimator : MonoBehaviour {
         animator.SetFloat("VelocityY", currentVelocityZ);
     }
 
-    public void PlayAttack1() {
-        animator.SetTrigger("Attack1");
+    public void PlayAttack() {
+        int randomAttack = Random.Range(0, 2);
+        if (randomAttack == 0)
+            animator.SetTrigger("Attack1");
+        else
+            animator.SetTrigger("Attack2");
     }
-
-    public void PlayAttack2() {
+    public void PlayComboAttack() {
+        animator.SetTrigger("Attack1");
         animator.SetTrigger("Attack2");
+    }
+    public void PlayCounterAttack() {
+        animator.SetTrigger("CounterAttack");
     }
 
     public void SetDefend(bool isDefending) {

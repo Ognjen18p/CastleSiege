@@ -5,57 +5,79 @@ using UnityEngine.SceneManagement;
 using UnityEngine.UIElements;
 
 public class EnemyBehaviour : MonoBehaviour {
-    public Dictionary<EnemyStateType, EnemyState> states = new Dictionary<EnemyStateType, EnemyState>();
+    public Dictionary<EnemyStateType, EnemyState> states;
     private EnemyState currentState;
     private EnemyStateType currentStateType;
 
     [Header("Enemy Components")]
-    public EnemyMovement movement;
-    public EnemyCombat combat;  
-    public EnemyAnimator animator;
-    public EnemyPathfinding pathfinding;
-    public Health health;
-    public GameObject player;
+    private EnemyMovement movement;
+    private EnemyCombat combat;
+    private EnemyAnimator animator;
+    private EnemyPathfinding pathfinding;
+    private Health health;
+    private GameObject player;
+    private bool playerInSight;
 
-    public List<StrafePoint> path { get; private set; }
+    public EnemyMovement Movement => movement;
+    public EnemyCombat Combat => combat;
+    public EnemyAnimator Animator => animator;
+    public EnemyPathfinding Pathfinding => pathfinding; 
+    public Health Health => health; 
+    public GameObject Player => player; 
+    public bool PlayerInSight => playerInSight;
 
     [Header("Enemy Configs")]
     private float targetCloseDistance = 10f;
     private float attackDistance = 30f;
     private float strafeDistance = 80f;
+    private float inSightDistance = 300f;
     public float TargetCloseDistance => targetCloseDistance;
     public float AttackDistance => attackDistance;
     public float StrafeDistance => strafeDistance;
+    public float InSightDistance => inSightDistance;
 
     private void Start() {
+        states = new Dictionary<EnemyStateType, EnemyState>();
         movement = GetComponent<EnemyMovement>();
         combat = GetComponent<EnemyCombat>();
         animator = GetComponent<EnemyAnimator>();
         pathfinding = GetComponent<EnemyPathfinding>();
         health = GetComponent<Health>();
+        player = GameObject.FindGameObjectWithTag("Player");
 
         InitializeStates();
+        SwitchState(EnemyStateType.Guard);
+    }
+
+    private void Update() {
+        currentState?.Update();
     }
 
     private void InitializeStates() {
         states[EnemyStateType.Guard] = new EnemyGuardingState(this);
-        //states[EnemyStateType.Chase] = new EnemyChasingState(this);
-        //states[EnemyStateType.Attack] = new EnemyAttackingState(this);
-        //states[EnemyStateType.Defend] = new EnemyDefendingState(this);
+        states[EnemyStateType.Chase] = new EnemyChaseState(this);
+        states[EnemyStateType.Combat] = new EnemyCombatState(this);
         //states[EnemyStateType.Return] = new EnemyReturningState(this);
-        //states[EnemyStateType.Idle] = new EnemyIdleState(this);
         //states[EnemyStateType.Dead] = new EnemyDeadState(this);
     }
 
     public void SwitchState(EnemyStateType newStateType) {
-        if(currentStateType == newStateType) return;
+        if (currentStateType == newStateType) return;
         currentState?.Exit();
         currentStateType = newStateType;
         currentState = states[newStateType];
         currentState?.Enter();
     }
 
+    private void OnTriggerEnter(Collider other) {
+        if (other.gameObject.CompareTag("Player"))
+            playerInSight = true;
+    }
 
+    private void OnTriggerExit(Collider other) {
+        if (other.gameObject.CompareTag("Player"))
+            playerInSight = false;
+    }
 }
 
 
@@ -84,10 +106,7 @@ public class EnemyBehaviour : MonoBehaviour {
 //    private List<StrafePoint> path = new List<StrafePoint>();
 //    private Health health;
 
-//    private float pointCloseDistance = 10f;
-//    private float attackDistance = 30f;
-//    private float strafeDistance = 60f;
-//    private float chaseDistance = 300f;
+
 
 //    private bool playerInSight;
 //    private bool isAttackChecking;

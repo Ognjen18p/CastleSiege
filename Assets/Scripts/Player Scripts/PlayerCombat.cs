@@ -5,9 +5,12 @@ using static PlayerWeapons;
 
 public class PlayerCombat : MonoBehaviour {
     [Header("Attack Settings")]
-    public bool isAttack = false;
-    public bool isGuard = false;
-    [SerializeField] private float attackCooldown = 1.2f;
+    private bool inAttack = false;
+    private bool inGuard = false;
+    private bool inBeginAttack = false;
+    public bool InAttack => inAttack;
+    public bool InGuard => inGuard;
+    public bool InBeginAttack => inBeginAttack;
     private PlayerAnimator playerAnimator;
     private Health health;
 
@@ -37,21 +40,24 @@ public class PlayerCombat : MonoBehaviour {
 
     private void Attack() {
         if (Input.GetMouseButtonDown(0)) {
-            if (!isAttack) {
+            if (!inAttack) {
                 playerAnimator.PlayAttack();
-                isAttack = true;
-                StartCoroutine(AttackCooldown());
+                inAttack = true;
+                inBeginAttack = true;
             }
         }
+        if (Input.GetMouseButtonDown(1)) {
+            playerAnimator.Special();
+        }
     }
-    IEnumerator AttackCooldown() {
-        yield return new WaitForSeconds(attackCooldown);
-        isAttack = false;
+    public void EndAttack() {
+        weaponCollision.EndAttack();
+        inAttack = false;
     }
     private void Guard() {
-        isGuard = Input.GetKey(KeyCode.Q);
-        playerAnimator.PlayGuard(isGuard);
-        health.currentlyGuarding = isGuard;
+        inGuard = Input.GetKey(KeyCode.Q);
+        playerAnimator.PlayGuard(inGuard);
+        health.currentlyGuarding = inGuard;
     }
 
     protected void GetHit() {
@@ -62,7 +68,7 @@ public class PlayerCombat : MonoBehaviour {
     }
 
     public void ForceStopAttack() {
-        isAttack = false;
+        inAttack = false;
         StopAllCoroutines();
     }
 
@@ -79,10 +85,12 @@ public class PlayerCombat : MonoBehaviour {
 
         if (weaponCollision != null)
             weaponCollision.BeginAttack();
+
+        inBeginAttack = false;
     }
 
     public void EndOfAttack() {
         if (weaponCollision != null)
-            weaponCollision.EndAttack();
+            EndAttack();
     }
 }
