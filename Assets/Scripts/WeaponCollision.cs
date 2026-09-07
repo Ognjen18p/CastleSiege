@@ -36,14 +36,6 @@ public class WeaponCollision : MonoBehaviour {
 
         hitTargets.Add(other.gameObject);
 
-        if (targetHealth.TakeDamage(damage))
-            PlaySound(hitSound);
-    }
-
-    private void PlaySound(AudioClip clip) {
-        if (audioSource != null && clip != null) {
-            audioSource.Stop();
-            audioSource.PlayOneShot(clip);
-        }
+        targetHealth.TakeDamage(damage);
     }
 }

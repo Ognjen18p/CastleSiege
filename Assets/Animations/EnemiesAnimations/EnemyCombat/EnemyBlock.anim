@@ -26128,8 +26128,8 @@ AnimationClip:
     floatParameter: 0
     intParameter: 0
     messageOptions: 0
-  - time: 1.2
-    functionName: EndGuard
+  - time: 1.1142857
+    functionName: EndDefend
     data: 
     objectReferenceParameter: {fileID: 0}
     floatParameter: 0

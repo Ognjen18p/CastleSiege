@@ -4,16 +4,15 @@ using UnityEngine;
 
 public class EnemyCombat : MonoBehaviour {
     [Header("Combat Chances")]
-    [SerializeField] private int defendChance = 80;
-    [SerializeField] private int attackChance = 90;
+    [SerializeField] private int defendChance = 60;
+    [SerializeField] private int attackChance = 70;
     [SerializeField] private int comboAttackChance = 50;
     [SerializeField] private int counterAttackChance = 40;
     [SerializeField] private int strafeBasicAttackChance = 60;
 
     [Header("Timer")]
-    [SerializeField] private float attackCooldown = 1.1f;
+    [SerializeField] private float attackCooldown = 5f;
     private bool canAttack = true;
-    private bool isDefending = false;
 
     [Header("Audio")]
     [SerializeField] private AudioClip attackSound;
@@ -23,6 +22,7 @@ public class EnemyCombat : MonoBehaviour {
     private AudioSource audioSource;
     private GameObject weapon;
     private WeaponCollision weaponCollision;
+    private Health health;
 
     private void Start() {
         if (weapon != null)
@@ -30,6 +30,7 @@ public class EnemyCombat : MonoBehaviour {
         audioSource = GetComponent<AudioSource>();
         player = GameObject.FindGameObjectWithTag("Player");
         playerCombat = player.GetComponent<PlayerCombat>();
+        health = GetComponent<Health>();
     }
 
     public bool ShouldCounterAttack() {
@@ -93,18 +94,10 @@ public class EnemyCombat : MonoBehaviour {
     }
 
     public bool ShouldDefend() {
-        if (playerCombat != null && !playerCombat.InAttack) {
-            isDefending = false;
-            return false;
-        }
-
-        if (isDefending && playerCombat != null && playerCombat.InAttack) {
-            return true;
-        }
-        if (playerCombat != null && playerCombat.InAttack) {
+        if (playerCombat != null && playerCombat.InAttack && !health.currentlyDefending) {
             int randomValue = Random.Range(0, 100);
             if (randomValue < defendChance) {
-                isDefending = true;
+                health.BeginDefend();
                 return true;
             }
         }
@@ -123,7 +116,6 @@ public class EnemyCombat : MonoBehaviour {
         if (weaponCollision != null)
             weaponCollision.EndAttack();
     }
-
 
     private void PlaySound(AudioClip clip) {
         if (audioSource != null && clip != null) {

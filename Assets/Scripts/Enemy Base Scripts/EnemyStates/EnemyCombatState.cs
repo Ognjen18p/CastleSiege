@@ -25,7 +25,7 @@ public class EnemyCombatState : EnemyState
 
     private void CheckInAttackRange() {
         float distance = Vector3.Distance(behaviour.transform.position, behaviour.Player.transform.position);
-        if (behaviour.AttackDistance < distance) {
+        if (distance > behaviour.AttackDistance) {
             behaviour.SwitchState(EnemyStateType.Chase);
         }
     }
@@ -40,6 +40,7 @@ public class EnemyCombatState : EnemyState
             return;
         }
         if(behaviour.Combat.ShouldCounterAttack()){
+            Debug.Log("JeSE");
             behaviour.Animator.PlayCounterAttack();
             return;
         }
@@ -51,7 +52,7 @@ public class EnemyCombatState : EnemyState
 
     private void CheckDeath() {
         if (behaviour.Health.IsDead()) {
-            behaviour.SwitchState(EnemyStateType.Dead);
+            //behaviour.SwitchState(EnemyStateType.Dead);
         }
     }
 }

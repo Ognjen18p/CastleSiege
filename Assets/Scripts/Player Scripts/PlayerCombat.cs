@@ -27,7 +27,7 @@ public class PlayerCombat : MonoBehaviour {
         if (audioSource == null)
             audioSource = GetComponent<AudioSource>();
         health = GetComponent<Health>();
-        health.currentlyGuarding = false;
+        health.currentlyDefending = false;
         weaponCollision = weapon.GetComponent<WeaponCollision>();
         playerAnimator = GetComponent<PlayerAnimator>();
     }
@@ -50,14 +50,10 @@ public class PlayerCombat : MonoBehaviour {
             playerAnimator.Special();
         }
     }
-    public void EndAttack() {
-        weaponCollision.EndAttack();
-        inAttack = false;
-    }
     private void Guard() {
         inGuard = Input.GetKey(KeyCode.Q);
         playerAnimator.PlayGuard(inGuard);
-        health.currentlyGuarding = inGuard;
+        health.currentlyDefending = inGuard;
     }
 
     protected void GetHit() {
@@ -91,6 +87,7 @@ public class PlayerCombat : MonoBehaviour {
 
     public void EndOfAttack() {
         if (weaponCollision != null)
-            EndAttack();
+            weaponCollision.EndAttack();
+        inAttack = false;
     }
 }

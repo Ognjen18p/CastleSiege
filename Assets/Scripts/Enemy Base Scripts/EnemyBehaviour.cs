@@ -62,7 +62,7 @@ public class EnemyBehaviour : MonoBehaviour {
     }
 
     public void SwitchState(EnemyStateType newStateType) {
-        if (currentStateType == newStateType) return;
+        if (currentState != null && currentStateType == newStateType) return;
         currentState?.Exit();
         currentStateType = newStateType;
         currentState = states[newStateType];

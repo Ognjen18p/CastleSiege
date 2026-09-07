@@ -43,7 +43,7 @@ public class EnemyAnimator : MonoBehaviour {
         animator.SetTrigger("Attack2");
     }
     public void PlayCounterAttack() {
-        animator.SetTrigger("CounterAttack");
+        animator.SetTrigger("CounterKick");
     }
 
     public void SetDefend(bool isDefending) {

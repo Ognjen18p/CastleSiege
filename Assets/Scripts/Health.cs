@@ -17,7 +17,7 @@ public class Health : MonoBehaviour {
     [SerializeField] private float barLerpSpeed = 5f;
 
     public bool tookDamage = false;
-    public bool currentlyGuarding = false;
+    public bool currentlyDefending = false;
     public bool isInvulnerable = false;
 
     private float targetHealth;
@@ -29,7 +29,7 @@ public class Health : MonoBehaviour {
 
         maxHealth = health;
         targetHealth = health;
-        currentlyGuarding = false;
+        currentlyDefending = false;
         isInvulnerable = false;
 
         if (splashParticles != null)
@@ -44,7 +44,7 @@ public class Health : MonoBehaviour {
     }
 
     public bool TakeDamage(float damage) {
-        if (currentlyGuarding || isInvulnerable) {
+        if (currentlyDefending || isInvulnerable) {
             return false;
         }
 
@@ -85,12 +85,12 @@ public class Health : MonoBehaviour {
         return targetHealth <= 0;
     }
 
-    public void BeginGuard() {
-        currentlyGuarding = true;
+    public void BeginDefend() {
+        currentlyDefending = true;
     }
 
-    public void EndGuard() {
-        currentlyGuarding = false;
+    public void EndDefend() {
+        currentlyDefending = false;
     }
 
     public void BeginSlashEffect() {
