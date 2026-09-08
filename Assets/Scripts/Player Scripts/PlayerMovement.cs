@@ -1,5 +1,4 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -17,11 +16,11 @@ public class PlayerMovement : MonoBehaviour {
 
     public float horizontalInput;
     public float verticalInput;
-    public bool lockMovement;
 
     private float mouseX;
     private Rigidbody rigidbody;
     private PlayerAnimator playerAnimator;
+    private PlayerCombat playerCombat;
     private Health health;
 
     void Start() {
@@ -29,6 +28,7 @@ public class PlayerMovement : MonoBehaviour {
         rigidbody.freezeRotation = true;
 
         playerAnimator = GetComponent<PlayerAnimator>();
+        playerCombat = GetComponent<PlayerCombat>();
         health = GetComponent<Health>();
 
         Cursor.lockState = CursorLockMode.Locked;
@@ -45,8 +45,11 @@ public class PlayerMovement : MonoBehaviour {
         Rotation();
         CheckDeath();
         HandleFootsteps();
-    }
 
+    }
+    private void FixedUpdate() {
+        Movement();
+    }
     private void CheckDeath() {
         if (health.health <= 0)
             StartCoroutine(DeathWait());
@@ -63,9 +66,6 @@ public class PlayerMovement : MonoBehaviour {
         SceneManager.LoadScene("Lost");
     }
 
-    private void FixedUpdate() {
-        Movement();
-    }
 
     private void TrackInput() {
         horizontalInput = Input.GetAxis("Horizontal");
@@ -74,34 +74,34 @@ public class PlayerMovement : MonoBehaviour {
     }
 
     private void Movement() {
-        if (lockMovement) return;
+        if (playerCombat.lockedTarget && playerCombat.lockTarget != null) return;
 
-        float final_speed = Input.GetKey(KeyCode.LeftShift) ? runSpeed : walkSpeed;
+        bool focused = playerCombat.lockedTarget && playerCombat.lockTarget != null;
+        float final_speed = focused ? walkSpeed : Input.GetKey(KeyCode.LeftShift) ? runSpeed : walkSpeed;
 
         Vector3 move_direction = transform.right * horizontalInput + transform.forward * verticalInput;
-
         move_direction.Normalize();
 
         Vector3 targetVelocity = move_direction * final_speed;
-
         if (move_direction.magnitude < 0.01f)
             targetVelocity = Vector3.zero;
 
-        playerAnimator.TrackMovementVelocity(
-            horizontalInput,
-            verticalInput
-        );
-
-        rigidbody.velocity = Vector3.Lerp(
-            rigidbody.velocity,
-            targetVelocity,
-            acceleration * Time.deltaTime
-        );
+        playerAnimator.TrackMovementVelocity(horizontalInput, verticalInput, focused);
+        rigidbody.velocity = Vector3.Lerp(rigidbody.velocity, targetVelocity, acceleration * Time.deltaTime);
     }
 
     private void Rotation() {
-        if (Mathf.Abs(mouseX) > 0.01f) {
-            Vector3 rotation = new Vector3(0,mouseX * Time.deltaTime * rotateSpeed,0);
+        if (playerCombat.lockedTarget && playerCombat.lockTarget != null) {
+            Vector3 direction = (playerCombat.lockTarget.transform.position - transform.position).normalized;
+            direction.y = 0;
+            if (direction.magnitude > 0.01f) {
+                Quaternion targetRotation = Quaternion.LookRotation(direction);
+                transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, rotateSpeed / 2 * Time.deltaTime);
+            }
+            return;
+        }
+        else if (Mathf.Abs(mouseX) > 0.01f) {
+            Vector3 rotation = new Vector3(0, mouseX * Time.deltaTime * rotateSpeed, 0);
 
             transform.Rotate(rotation, Space.Self);
         }
@@ -114,7 +114,7 @@ public class PlayerMovement : MonoBehaviour {
         bool isMoving = Mathf.Abs(horizontalInput) > 0.01f ||
             Mathf.Abs(verticalInput) > 0.01f;
 
-        if (!isMoving || lockMovement) {
+        if (!isMoving || playerCombat.lockedTarget) {
             if (footstepsSource.isPlaying)
                 footstepsSource.Stop();
             return;
@@ -122,8 +122,7 @@ public class PlayerMovement : MonoBehaviour {
 
         bool isRunning = Input.GetKey(KeyCode.LeftShift);
 
-        AudioClip targetClip =
-            isRunning ? runSound : walkSound;
+        AudioClip targetClip = isRunning ? runSound : walkSound;
 
         if (targetClip == null)
             return;

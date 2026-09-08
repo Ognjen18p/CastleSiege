@@ -1,7 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using UnityEngine.AI;
+﻿using UnityEngine;
 
 public class EnemyMovement : MonoBehaviour {
     [Header("Movement Settings")]
@@ -9,9 +6,18 @@ public class EnemyMovement : MonoBehaviour {
     public float runSpeed;
     [SerializeField] protected float rotationSpeed;
 
+    [Header("Guarding")]
+    [SerializeField] private GameObject guardingPoint;
+    [SerializeField] private GameObject guardingSightPoint;
+
+    public GameObject GuardingPoint => guardingPoint;
+    public GameObject GuardingSightPoint => guardingSightPoint;
+    private bool playerInSight;
+    public bool PlayerInSight => playerInSight;
     public float distanceToNextPoint { get; private set; }
     private Rigidbody rb;
     private EnemyAnimator animator;
+
 
     private void Start() {
         rb = GetComponent<Rigidbody>();
@@ -57,8 +63,18 @@ public class EnemyMovement : MonoBehaviour {
     }
 
     public void StopMovement() {
-        if(rb != null) {
+        if(rb != null && rb.velocity != Vector3.zero) {
             rb.velocity = Vector3.zero;
+        }
+    }
+    private void OnTriggerStay(Collider other) {
+        if (other.CompareTag("Player"))
+            playerInSight = true;
+    }
+
+    private void OnTriggerExit(Collider other) {
+        if (other.CompareTag("Player")) {
+            playerInSight = false;
         }
     }
 }

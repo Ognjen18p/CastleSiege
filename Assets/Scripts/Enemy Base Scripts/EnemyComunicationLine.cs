@@ -1,70 +1,133 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class EnemyCommunicationLine : MonoBehaviour {
     public static EnemyCommunicationLine getInstance;
 
-    private List<EnemyBehaviour> allies = new List<EnemyBehaviour>();
-    private EnemyBehaviour tokenHolder;
+    private EnemyBehaviour mainTarget;
+    private EnemyBehaviour leftTarget;
+    private EnemyBehaviour rightTarget;
 
-    private void Awake() { getInstance = this; }
+    public EnemyBehaviour MainTarget => mainTarget;
+    public EnemyBehaviour LeftTarget => leftTarget;
+    public EnemyBehaviour RightTarget => rightTarget;
 
-    public bool TryTakeToken(EnemyBehaviour requester) {
-        if (tokenHolder != null) return false;
-        tokenHolder = requester;
+    private void Awake() {
+        getInstance = this;
+    }
+    private void Update() {
+        CheckMainTarget();
+    }
+
+    private void CheckMainTarget() {
+        if (mainTarget != null && !mainTarget.Health.IsDead())
+            return;
+
+        mainTarget = null;
+
+        PromoteClosestStrafeTarget();
+    }
+    private void PromoteClosestStrafeTarget() {
+        EnemyBehaviour newMainTarget = null;
+
+        if (leftTarget != null && !leftTarget.Health.IsDead())
+            newMainTarget = leftTarget;
+
+        if (rightTarget != null && !rightTarget.Health.IsDead()) {
+            if (newMainTarget == null) {
+                newMainTarget = rightTarget;
+            }
+            else {
+                float leftDistance = Vector3.Distance(leftTarget.transform.position, leftTarget.Player.transform.position);
+                float rightDistance = Vector3.Distance(rightTarget.transform.position, rightTarget.Player.transform.position);
+
+                if (rightDistance < leftDistance)
+                    newMainTarget = rightTarget;
+            }
+        }
+
+        if (newMainTarget == null)
+            return;
+
+        if (newMainTarget == leftTarget)
+            leftTarget = null;
+
+        if (newMainTarget == rightTarget)
+            rightTarget = null;
+
+        mainTarget = newMainTarget;
+        mainTarget.SwitchState(EnemyStateType.Combat);
+    }
+
+    public bool TryTakeMainTarget(EnemyBehaviour enemy) {
+        if (mainTarget != null)
+            return false;
+
+        mainTarget = enemy;
         return true;
     }
 
-    public bool IsTokenTaken() {
-        return tokenHolder != null;
-    }
+    public int TryTakeStrafeTarget(EnemyBehaviour enemy) {
+        int randomSide = Random.Range(0, 2);
 
-    public bool AmITokenHolder(EnemyBehaviour enemyBehaviour) {
-        return tokenHolder == enemyBehaviour;
-    }
+        if (randomSide == 0) {
+            if (leftTarget == null) {
+                leftTarget = enemy;
+                return -1;
+            }
 
-    public bool IsTokenHolderDefending() {
-        if (tokenHolder == null) return false;
-        return false;
-    }
-
-    public void ReleaseToken(EnemyBehaviour holder, EnemyBehaviour newHolder) {
-        if (tokenHolder == holder) {
-            tokenHolder = newHolder;
-            AssignTokenToClosest();
-        }
-    }
-
-    private void AssignTokenToClosest() {
-        EnemyBehaviour closest = null;
-        float clossestDistance = float.MaxValue;
-        foreach (EnemyBehaviour ally in allies) {
-            if (ally == null) continue;
-            float distance = Vector3.Distance(ally.Player.transform.position, ally.transform.position);
-            if (distance < clossestDistance) {
-                clossestDistance = distance;
-                closest = ally;
+            if (rightTarget == null) {
+                rightTarget = enemy;
+                return 1;
             }
         }
-        if (closest != null) {
-            tokenHolder = closest;
-            Health health = tokenHolder.gameObject.GetComponent<Health>();
-            health.isInvulnerable = false;
+        else {
+            if (rightTarget == null) {
+                rightTarget = enemy;
+                return 1;
+            }
+
+            if (leftTarget == null) {
+                leftTarget = enemy;
+                return -1;
+            }
         }
+
+        return 0;
     }
 
-    public void AddAlly(EnemyBehaviour enemy) {
-        allies.Add(enemy);
-        if (tokenHolder != null) {
-            Health health = enemy.gameObject.GetComponent<Health>();
-            health.isInvulnerable = true;
-            return;
-        }
-        AssignTokenToClosest();
+    public bool AmIMainTarget(EnemyBehaviour enemy) {
+        return mainTarget == enemy;
     }
-    public void RemoveAlly(EnemyBehaviour enemy) {
-        allies.Remove(enemy);
-        AssignTokenToClosest();
+
+    public bool AmILeftTarget(EnemyBehaviour enemy) {
+        return leftTarget == enemy;
+    }
+
+    public bool AmIRightTarget(EnemyBehaviour enemy) {
+        return rightTarget == enemy;
+    }
+
+    public void ReleaseSlot(EnemyBehaviour enemy) {
+        bool releasedMain = false;
+
+        if (AmIMainTarget(enemy)) {
+            mainTarget = null;
+            releasedMain = true;
+        }
+        if (AmILeftTarget(enemy))
+            leftTarget = null;
+        if (AmIRightTarget(enemy))
+            rightTarget = null;
+        if (releasedMain)
+            PromoteClosestStrafeTarget();
+    }
+
+    public bool HasFreeStrafeSlot() {
+        return leftTarget == null || rightTarget == null;
+    }
+
+    public bool IsMainTargetTaken() {
+        return mainTarget != null;
     }
 }

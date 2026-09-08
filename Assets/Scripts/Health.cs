@@ -18,7 +18,6 @@ public class Health : MonoBehaviour {
 
     public bool tookDamage = false;
     public bool currentlyDefending = false;
-    public bool isInvulnerable = false;
 
     private float targetHealth;
     private ParticleSystem splashParticles;
@@ -30,7 +29,6 @@ public class Health : MonoBehaviour {
         maxHealth = health;
         targetHealth = health;
         currentlyDefending = false;
-        isInvulnerable = false;
 
         if (splashParticles != null)
             splashParticles.Stop();
@@ -44,7 +42,7 @@ public class Health : MonoBehaviour {
     }
 
     public bool TakeDamage(float damage) {
-        if (currentlyDefending || isInvulnerable) {
+        if (currentlyDefending) {
             return false;
         }
 
@@ -90,7 +88,7 @@ public class Health : MonoBehaviour {
     }
 
     public void EndDefend() {
-        currentlyDefending = false;
+        currentlyDefending = false; 
     }
 
     public void BeginSlashEffect() {

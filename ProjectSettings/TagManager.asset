@@ -25,6 +25,8 @@ TagManager:
   - Enemy
   - Border
   - Leader
+  - CounterLeg
+  - Obstacle
   layers:
   - Default
   - TransparentFX

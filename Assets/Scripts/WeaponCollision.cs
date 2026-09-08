@@ -28,6 +28,17 @@ public class WeaponCollision : MonoBehaviour {
 
     private void OnTriggerEnter(Collider other) {
         if (!canDealDamage) return;
+        /// IF ENEMY
+        EnemyBehaviour enemy = other.GetComponentInParent<EnemyBehaviour>();
+        if (enemy != null) {
+            EnemyCommunicationLine communication = EnemyCommunicationLine.getInstance;
+
+            if (communication == null ||
+                communication.MainTarget != enemy) {
+                return;
+            }
+        }
+
         if (other.transform.root.CompareTag(transform.root.tag)) return;
         if (hitTargets.Contains(other.gameObject)) return;
 

@@ -17,6 +17,7 @@ public class Strafing : MonoBehaviour {
         sizeZ = transform.localScale.z; 
         strafePoints = new List<StrafePoint>();
         CreatePoints();
+        StartCoroutine(CreatePointsNeighbors());
     }
 
     private void CreatePoints() {
@@ -28,10 +29,13 @@ public class Strafing : MonoBehaviour {
                 strafePoints.Add(newPoint.GetComponent<StrafePoint>());
             }
         }
+        
+    }
+    IEnumerator CreatePointsNeighbors() {
+        yield return new WaitForSeconds(1f);
         foreach (StrafePoint point in strafePoints) {
+            if (!point.available) continue;
             point.GenerateNeighbors(strafePoints, density * 1.5f);
         }
-
     }
-
 }

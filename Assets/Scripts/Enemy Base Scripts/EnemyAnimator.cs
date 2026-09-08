@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class EnemyAnimator : MonoBehaviour {
     [Header("Movement Blend")]
@@ -39,8 +37,8 @@ public class EnemyAnimator : MonoBehaviour {
             animator.SetTrigger("Attack2");
     }
     public void PlayComboAttack() {
-        animator.SetTrigger("Attack1");
         animator.SetTrigger("Attack2");
+        animator.SetTrigger("ComboAttack");
     }
     public void PlayCounterAttack() {
         animator.SetTrigger("CounterKick");
@@ -52,7 +50,6 @@ public class EnemyAnimator : MonoBehaviour {
     public void PlayGetHit() {
         animator.SetTrigger("GetHit");
     }
-
     public void PlayDead() {
         animator.SetTrigger("Dead");
     }

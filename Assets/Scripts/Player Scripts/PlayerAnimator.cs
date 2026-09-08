@@ -1,7 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using static PlayerWeapons;
+﻿using UnityEngine;
 
 public class PlayerAnimator : MonoBehaviour {
     [Header("Player Animator")]
@@ -22,8 +19,8 @@ public class PlayerAnimator : MonoBehaviour {
 
     }
 
-    public void TrackMovementVelocity(float horizontalInput, float verticalInput) {
-        float currentLimit = Input.GetKey(KeyCode.LeftShift) ? runLimit : walkLimit;
+    public void TrackMovementVelocity(float horizontalInput, float verticalInput, bool focused) {
+        float currentLimit = focused ? walkLimit : (Input.GetKey(KeyCode.LeftShift) ? runLimit : walkLimit);
         float limitVelocityX = horizontalInput * currentLimit;
         float limitVelocityY = verticalInput * currentLimit;
 
@@ -51,10 +48,6 @@ public class PlayerAnimator : MonoBehaviour {
             animator.SetTrigger("Attack2");
         }
     }
-    public void Special() {
-        animator.SetTrigger("SwordSpecialAttack");
-    }
-
     public void PlayGuard(bool isGuarding) {
         animator.SetBool("Guard", isGuarding);
     }
@@ -66,5 +59,7 @@ public class PlayerAnimator : MonoBehaviour {
     public void DeathAnimation() {
         animator.SetTrigger("Death");
     }
-
+    public void ResetAnim() {
+        animator.Play("Movement");
+    }
 }

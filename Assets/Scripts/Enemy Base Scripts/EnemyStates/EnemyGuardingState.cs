@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class EnemyGuardingState : EnemyState {
@@ -15,7 +13,7 @@ public class EnemyGuardingState : EnemyState {
     }
 
     void EnemyState.Update() {
-        if(behaviour.PlayerInSight) {
+        if(behaviour.Movement.PlayerInSight) {
             behaviour.SwitchState(EnemyStateType.Chase);
         }
     }
